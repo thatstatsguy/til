@@ -1,2 +1,1 @@
-# til
-A collect of code examples
+A collection of code examples which normally accompany articles I write on https://thatstatsguy.github.io/blog.
