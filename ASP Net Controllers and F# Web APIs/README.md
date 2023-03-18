@@ -1,0 +1,1 @@
+These are the example files which accompany my article on building Web Apis in F#. The article can be found [here](https://thatstatsguy.github.io/blog/2023/Asp-Net-Controller-Class-Differences/).
