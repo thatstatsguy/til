@@ -1,4 +1,4 @@
-namespace FluentValidation.Classes;
+namespace FluentValidationTests.Classes;
 
 public class Manager
 {

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace FluentValidation.Classes;
+namespace FluentValidationTests.Classes;
 
 public class Employee
 {
