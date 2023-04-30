@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using FluentValidationTests.Classes
+@using Blazored.FluentValidation
 
 <PageTitle>Index</PageTitle>
 
@@ -29,16 +30,33 @@
         </EditForm>
     }
 </div>
-@* <div class="mt-3"> *@
-@*     @if (_validManagerSubmitted) *@
-@*     { *@
-@*         <p>Valid Manager @_manager.Name @_manager.Surname Submitted</p> *@
-@*     } *@
-@*     else *@
-@*     { *@
-@*         <EditForm Model="_employee" OnInvalidSubmit="ValidManagerSubmission"></EditForm> *@
-@*     } *@
-@* </div> *@
+<div class="my-1">
+    @if (_validManagerSubmitted)
+    {
+        <p>Valid Manager @_manager.Name @_manager.Surname Submitted</p>
+    }
+    else
+    {
+        <EditForm Model="_manager" OnValidSubmit="ValidManagerSubmission">
+            <div class="form-group mt-1">
+                <label for="ManagerName">Please provide a manager name</label>
+                <InputTextArea id="ManagerName" rows="1" class="form-control h-50" @bind-Value="_manager.Name"/>
+            </div>
+            <div class="form-group mt-1">
+                <label for="ManagerSurname">Please provide a manager surname</label>
+                <InputTextArea id="ManagerSurname" rows="1" class="form-control h-50" @bind-Value="_manager.Surname"/>
+            </div>
+            <div class="form-group mt-1">
+                <label for="ManagerAge">Please provide age</label>
+                <InputNumber id="ManagerAge" class="form-control h-50" @bind-Value="_manager.Age"/>
+            </div>
+            <button type="submit" class="btn btn-primary my-3">Submit Manager</button>
+            <FluentValidationValidator />
+            <ValidationSummary/>
+            
+        </EditForm>
+    }
+</div>
 
 @code
 {
