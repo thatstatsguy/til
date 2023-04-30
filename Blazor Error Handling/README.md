@@ -1,0 +1,1 @@
+These are the example files which accompany my article on Error Handling in Blazor. The article can be found [here](https://thatstatsguy.github.io/blog/2023/Error-Handling-in-Blazor/).
