@@ -1,0 +1,39 @@
+﻿@page "/"
+@using Application.Contracts.Persistence
+@using Domain
+
+
+@inject IRepository<Book> BookRepository
+<PageTitle>Index</PageTitle>
+
+<button @onclick="AddNewBook">Add new book</button>
+
+<button @onclick="GetExistingBook">Get existing book</button>
+
+@if (_loadedBook is not null)
+{
+    <p>Book found! Title: @_loadedBook.Title, Author: @_loadedBook.Author.Name @_loadedBook.Author.Surname </p>
+}
+
+<SurveyPrompt Title="How is Blazor working for you?"/>
+
+@code {
+    private Guid _bookId = Guid.Parse("60CBED03-F764-4D9E-86C1-E7A33506A484");
+    private Guid _authorId =  Guid.Parse("337BD93E-4369-4041-85BE-42614A095B9E");
+    private Book? _loadedBook;
+    private void AddNewBook()
+    {
+        BookRepository.Add(new Book()
+        {
+            Id = _bookId,
+            Title = "Test Title",
+            Author = new Author() { Id = _authorId, Name = "Author Name", Surname = "Author Surname" }
+        });
+    }
+
+    private void GetExistingBook()
+    {
+        _loadedBook = BookRepository.GetById(_bookId);
+    }
+
+}
