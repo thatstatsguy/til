@@ -1,0 +1,14 @@
+<h6>@_calculatedMessage</h6>
+
+@code {
+    private string _calculatedMessage = "Great Grandchild Component Value: ???";
+    
+    [CascadingParameter]
+    public string Message { get; set; } = string.Empty;
+
+
+    protected override void OnParametersSet()
+    {
+        _calculatedMessage = $"Great Grandchild Component Value: {Message}";
+    }
+}

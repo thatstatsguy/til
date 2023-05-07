@@ -1,0 +1,54 @@
+﻿@page "/"
+
+<PageTitle>Index</PageTitle>
+
+<h2>Refresh Testing</h2>
+<button @onclick="ChangeValues">Change Component Values</button>
+<div class="m-3" style="border: 2px solid black">
+    <div class="m-2">
+            <h3>Using No Explicit Refresh Method</h3>
+            <BaselineChild Message="@_refreshComponentMessage"></BaselineChild>
+        </div>
+</div>
+<div class="m-3" style="border: 2px solid black">
+    <div class="m-2">
+        <h3>Calling Refresh Method</h3>
+        <RefreshChild @ref="@_refreshChild" Message="@_refreshComponentMessage"></RefreshChild>
+    </div>
+    
+</div>
+<div class="m-3" style="border: 2px solid black">
+    <div class="m-2">
+        <h3>Using OnParameterSet</h3>
+        <OnParameterSetChild Message="@_onParameterSetComponentMessage"></OnParameterSetChild>
+    </div>
+    
+</div>
+<div class="m-3" style="border: 2px solid black">
+    <div class="m-2">
+        <h3>Using Cascading Parameters</h3>
+        <CascadingValue Value="@_cascadingComponentMessage">
+            <CascadeChild/>
+        </CascadingValue>
+    </div>
+</div>
+
+@code
+{
+    private string _baselineComponentMessage = "Not Set";
+    private string _refreshComponentMessage = "Not Set";
+    private string _onParameterSetComponentMessage = "Not Set";
+    private string _cascadingComponentMessage = "Not Set";
+
+
+    private RefreshChild _refreshChild;
+    
+    private void ChangeValues()
+    {
+        _baselineComponentMessage = "Hello World via Component Refresh";
+        _refreshChild.Refresh("Hello World via Component Refresh");
+        _onParameterSetComponentMessage = "Hello World via OnParameterSet Refresh";
+        _cascadingComponentMessage = "Hello World via Cascading Parameters Refresh";
+    }
+    
+}
