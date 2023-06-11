@@ -1,0 +1,1 @@
+These are the example files which accompany my article on using Health Checks in C#. The article can be found [here](https://thatstatsguy.github.io/blog/2023/AspNet-HealthChecks/).

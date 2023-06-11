@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using HealthChecks.Data;
 using HealthChecks.Health;
 using HealthChecks.UI.Client;
@@ -14,7 +12,9 @@ builder.Services.AddSingleton<WeatherForecastService>();
 
 //add health checks
 builder.Services.AddHealthChecks()
-    .AddCheck<AzureFunctionHealthChecks>("AzureFunction");
+    .AddCheck<AzureFunctionHealthChecks>("AzureFunction")
+    .AddCheck<GrpcHealthCheck>("GRPC Service");
+    //To add health check for SQL Server
     //.AddSqlServer("<AddSqlServerConnectionString>");
 var app = builder.Build();
 

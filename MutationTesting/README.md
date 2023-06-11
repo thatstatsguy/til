@@ -1,1 +1,1 @@
-These are the example files which accompany my article on using OneOf in C#. The article can be found [here](https://thatstatsguy.github.io/blog/2023/Mutation-Testing-in-CSharp/).
+These are the example files which accompany my article on mutation in C#. The article can be found [here](https://thatstatsguy.github.io/blog/2023/Mutation-Testing-in-CSharp/).
