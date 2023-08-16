@@ -1,6 +1,6 @@
 namespace ValueObjects;
 
-/// Value type
+/// Value object
 /// In DDD, it's a type defined only by its values
 /// two objects with the same values are equal under this def
 /// Value objects are immutable by design

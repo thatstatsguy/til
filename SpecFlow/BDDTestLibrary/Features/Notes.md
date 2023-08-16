@@ -1,0 +1,1 @@
+Features/Business requirements that works well with the given when then methodology of tests. Should be human readable by most users in business including non-devs
