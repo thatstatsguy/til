@@ -29,12 +29,20 @@
 
   <ItemGroup>
     <UpToDateCheckInput Remove="Features\LoggedInDiscount.feature" />
+    <UpToDateCheckInput Remove="ComplexExample\ComplexLoggedInDiscount.feature" />
   </ItemGroup>
 
 
 
   <ItemGroup>
     <UpToDateCheckBuild Remove="Features\LoggedInDiscount.feature.cs" />
+    <UpToDateCheckBuild Remove="ComplexExample\ComplexLoggedInDiscount.feature.cs" />
+  </ItemGroup>
+
+
+
+  <ItemGroup>
+    <Folder Include="Tests\" />
   </ItemGroup>
 
 </Project>

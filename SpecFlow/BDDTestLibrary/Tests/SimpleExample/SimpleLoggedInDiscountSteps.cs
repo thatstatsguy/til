@@ -2,7 +2,7 @@ using FluentAssertions;
 using Service;
 using TechTalk.SpecFlow;
 
-namespace BDDTestLibrary.SimpleExample;
+namespace BDDTestLibrary.Tests.SimpleExample;
 
 [Binding, Scope(Feature ="Simple Test : Logged in user has a discount")]
 public class SimpleLoggedInDiscountSteps
