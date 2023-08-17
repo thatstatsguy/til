@@ -2,11 +2,10 @@ using FluentAssertions;
 using Service;
 using TechTalk.SpecFlow;
 
-namespace BDDTestLibrary.Steps;
+namespace BDDTestLibrary.ComplexExample;
 
-//binding attribute needed so that feature file picks up steps
-[Binding] 
-public class LoggedDiscountSteps
+[Binding, Scope(Feature ="Complex Test : Logged in user has a discount")]
+public class ComplexLoggedInDiscountSteps
 {
     //you're able to inject this if you want
     private User _user;
@@ -51,6 +50,4 @@ public class LoggedDiscountSteps
         basketValue.Should().Be(expectedPrice);
 
     }
-    
-    
 }

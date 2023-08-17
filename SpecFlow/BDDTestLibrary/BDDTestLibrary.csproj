@@ -25,4 +25,16 @@
     <ProjectReference Include="..\Service\Service.csproj" />
   </ItemGroup>
 
+
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Features\LoggedInDiscount.feature" />
+  </ItemGroup>
+
+
+
+  <ItemGroup>
+    <UpToDateCheckBuild Remove="Features\LoggedInDiscount.feature.cs" />
+  </ItemGroup>
+
 </Project>
