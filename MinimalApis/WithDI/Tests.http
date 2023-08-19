@@ -1,9 +1,9 @@
 ### Add method using Dependency Injection
-GET http://localhost:5260/DI/Add?number1=1&number2=2
+GET http://localhost:5260/DI/Add?number1=1&number2=777
 
 > {%
     client.test("Request executed successfully", function() {
         client.assert(response.status === 200, "Response status is not 200");
-        client.assert(response.body === 3, "Response is not 3");
+        client.assert(response.body === 778, "Response is not 778");
     });
 %}
