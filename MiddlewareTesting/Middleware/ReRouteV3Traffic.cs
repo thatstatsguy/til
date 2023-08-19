@@ -1,7 +1,3 @@
-using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Rewrite;
 
 namespace MiddlewareTesting.Middleware;
 
