@@ -1,39 +1,13 @@
-### Baseline
-GET http://localhost:5260/weatherforecast
-
-
-### Add with parameters in the URL
-GET http://localhost:5260/Simple/Add?number1=1&number2=2
-
-> {%
-    client.test("Request executed successfully", function() {
-        client.assert(response.status === 200, "Response status is not 200");
-        client.assert(response.body === 3, "Response is not 3");
-    });
-%}
-
-### Add with parameters in the URL
-GET http://localhost:5260/Simple/AddAlternative/1/2
-
-> {%
-    client.test("Request executed successfully", function() {
-        client.assert(response.status === 200, "Response status is not 200");
-        client.assert(response.body === 3, "Response is not 3");
-    });
-%}
-
-### Add with POST method
-POST http://localhost:5260/Simple/AddWithPost
+### Validation with POST method
+POST http://localhost:5260/Validation/Add
 Content-Type: application/json
 
 {
-  "number1": 999,
-  "number2": 1
+  "number1": 999
 }
 
 > {%
     client.test("Request executed successfully", function() {
-        client.assert(response.status === 200, "Response status is not 200");
-        client.assert(response.body === 1000, "Response is not 1000");
+        client.assert(response.status === 400, "Response status is not a bad request");
     });
 %}
