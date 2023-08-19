@@ -22,6 +22,10 @@ public class UserOriginTracker : IMiddleware
         //https://stackoverflow.com/questions/28664686/how-do-i-get-client-ip-address-in-asp-net-core
         var connectingClientIp = context.Connection.RemoteIpAddress?.ToString() ?? "";
         _userTracking.CaptureUserIpAddress(connectingClientIp);
+        
+        //calls the next middleware component in the chain
         await next(context);
+        
+        //technically able to do stuff after the await is done - allows you to create a nesting effect
     }
 }
