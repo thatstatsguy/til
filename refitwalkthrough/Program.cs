@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Mvc;
 using Refit;
 using refitwalkthrough;
+using refitwalkthrough.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,7 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services
+    .AddRefitClient<IRandomStringGenerator>()
+    .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://ciprand.p3p.repl.co"));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -25,6 +29,12 @@ app.MapGet("/testwithoutDI", async () =>
     return await boredApi.GetUser();
 });
 
+app.MapGet("/testwithDI", async ([FromServices] IRandomStringGenerator stringGenerator) =>
+{
+    //https://github.com/polarspetroll/ciprand
+    var results = await stringGenerator.GetRandomStrings(10,1);
+    return results;
+});
 
 
 app.Run();
