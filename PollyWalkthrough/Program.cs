@@ -35,7 +35,7 @@ app.AddBaselineEndpoints();
 app.AddCircuitBreakerEndpoints();
 app.AddExponentialBackoffEndpoints();
 app.AddExponentialBackoffWithJitterEndpoints();
-app.AddFallBackEndpoints();
+app.AddCachingBackEndpoints();
 app.AddRateLimitEndpoints();
 app.AddRetryEndpoints();
 app.AddCustomEndpoints();
