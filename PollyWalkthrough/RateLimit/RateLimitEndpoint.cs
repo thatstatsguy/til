@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Polly.RateLimit;
+namespace PollyWalkthrough.RateLimit;
 
 public static class RateLimitEndpoint
 {

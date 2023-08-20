@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Polly.ExponentialBackoffWithJitter;
+namespace PollyWalkthrough.ExponentialBackoffWithJitter;
 
 public static class ExponentialBackoffEndpointsWithJitter
 {

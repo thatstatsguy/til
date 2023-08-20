@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Polly.Timeout;
+namespace PollyWalkthrough.Timeout;
 
 public static class TimeoutEndPoint
 {

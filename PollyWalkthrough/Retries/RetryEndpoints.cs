@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Polly.Retries;
+namespace PollyWalkthrough.Retries;
 
 public static class RetryEndpoints
 {

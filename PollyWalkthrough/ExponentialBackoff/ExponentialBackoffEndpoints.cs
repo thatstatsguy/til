@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Polly.ExponentialBackoff;
+namespace PollyWalkthrough.ExponentialBackoff;
 
 public static class ExponentialBackoffEndpoints
 {

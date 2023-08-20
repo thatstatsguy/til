@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Polly.CircuitBreaker;
+namespace PollyWalkthrough.CircuitBreaker;
 
 public static class CircuitBreakerEndpoints
 {

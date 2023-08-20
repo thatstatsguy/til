@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Polly.Baseline;
+namespace PollyWalkthrough.Baseline;
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {

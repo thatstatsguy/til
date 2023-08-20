@@ -1,12 +1,12 @@
-using Polly.Baseline;
-using Polly.CircuitBreaker;
-using Polly.ExponentialBackoff;
-using Polly.ExponentialBackoffWithJitter;
-using Polly.Fallback;
-using Polly.RateLimit;
-using Polly.Retries;
-using Polly.SelfBakedTransientFailure;
-using Polly.Timeout;
+using PollyWalkthrough.Baseline;
+using PollyWalkthrough.CircuitBreaker;
+using PollyWalkthrough.ExponentialBackoff;
+using PollyWalkthrough.ExponentialBackoffWithJitter;
+using PollyWalkthrough.Fallback;
+using PollyWalkthrough.RateLimit;
+using PollyWalkthrough.Retries;
+using PollyWalkthrough.SelfBakedTransientFailure;
+using PollyWalkthrough.Timeout;
 
 var builder = WebApplication.CreateBuilder(args);
 

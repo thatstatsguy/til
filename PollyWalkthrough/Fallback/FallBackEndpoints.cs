@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Polly.Fallback;
+namespace PollyWalkthrough.Fallback;
 
 public static class FallBackEndpoints
 {

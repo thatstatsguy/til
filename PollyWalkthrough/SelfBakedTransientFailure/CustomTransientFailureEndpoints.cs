@@ -1,7 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Polly.SelfBakedTransientFailure;
+namespace PollyWalkthrough.SelfBakedTransientFailure;
 
 public static class CustomTransientFailureEndpoints
 {
