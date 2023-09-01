@@ -37,6 +37,10 @@ Welcome to your new app.
     <div>
         <button @onclick="Example9">Example 9</button>    
     </div>
+    
+    <div>
+        <button @onclick="Example10">ReadFile</button>    
+    </div>
 </div>
 
 
@@ -242,6 +246,28 @@ Welcome to your new app.
         StateHasChanged();
     }
 
-    
+
+    private async Task Example10()
+    {
+        //showcases an example why you need to iterate through this
+        // this won't run otherwise
+        //var thisWillDoNothing = ReadStuffs();
+        // await foreach (var element in ReadStuffs())
+        // {
+        //     _message = element;
+        //     StateHasChanged();
+        // }
+    }
+
+    private async IAsyncEnumerable<string> ReadStuffs()
+    {
+        using var stream = new StreamReader("Numbers.txt");
+
+        while (await stream.ReadLineAsync() is string line)
+        {
+            await Task.Delay(400);
+            yield return line;
+        }
+    }
 
 }
