@@ -1,9 +1,247 @@
 ﻿@page "/"
 
+
+
 <PageTitle>Index</PageTitle>
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+<div>
+    <div>
+        <button @onclick="Example1">Example 1</button>    
+        <button @onclick="OtherButtonClicked">Set to a random message</button>
+    </div>
+    <div>
+        <button @onclick="Example2">Example 2</button>    
+    </div>
+    <div>
+        <button @onclick="Example3">Example 3</button>    
+    </div>
+    <div>
+        <button @onclick="Example4">Example 4</button>    
+    </div>
+    <div>
+        <button @onclick="Example5">Example 5</button>    
+    </div>
+    <div>
+        <button @onclick="Example6">Example 6</button>    
+    </div>
+    
+    <div>
+        <button @onclick="Example7">Example 7</button>    
+    </div>
+    <div>
+        <button @onclick="Example8">Example 8</button>    
+    </div>
+    <div>
+        <button @onclick="Example9">Example 9</button>    
+    </div>
+</div>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+
+@if (!string.IsNullOrEmpty(_message))
+{
+    <p>@_message</p>
+}
+
+@code {
+
+    private string _message = string.Empty;
+    
+    private void Example1()
+    {
+        //example 1 - when click this button. DoSomething calls Thread.Sleep.
+        //If I click other button program complete unresponsive
+        DoSomething();
+    }
+    private void Example2()
+    {
+        //example 2 - Wrapping in Task.Run
+        // Will raise exception 
+        /*
+             * System.InvalidOperationException: The current thread is not associated with the Dispatcher.
+             * Use InvokeAsync() to switch execution to the Dispatcher when triggering rendering or component state.
+             */
+        //Reason for this is you're try to manipulate the UI thread through
+        //StateHasChanged when you're not on main thread. 
+        Task.Run(DoSomething);
+    }
+    private void Example3()
+    {
+        //example 3 - Wrapping just the "heavy lifting" code in task.run
+        //illustrates how the exception will be swallowed
+        DoSomething1();
+    }
+    private void Example4()
+    {
+        //example 4 - catching the faulted state and logging it.
+        //While logging another exception pops up which is also swallowed.
+        //Application still remains responsive
+        DoSomething2();
+        
+        //note that if you task returns a results, calling Task.Result will
+        //"pop" out all these exceptions
+    }
+    private void Example5()
+    {
+        Dispatcher.CreateDefault().InvokeAsync(() =>
+        {
+            _message = "You shall not pass code review";
+            InvokeAsync(StateHasChanged);
+        });
+    }
+    private async Task Example6()
+    {
+        //always use async and await together
+        //
+        var message = await DoSomething6();
+        _message = message;
+        StateHasChanged();
+    }
+    private async Task Example7()
+    {
+        //if you don't use await immediately,
+        //control returned to thread which started the task.
+        // order of the messages won't be as expected
+        _message = "Starting";
+        StateHasChanged();
+        var messageUpdateTask = DoSomething7();
+        _message = "Stopping";
+        StateHasChanged();
+        await messageUpdateTask;
+    }
+    
+    private void Example8()
+    {
+        try
+        {
+            DoSomething8();
+        }
+        catch (Exception e)
+        {
+            //since we're not waiting for something to finish (with await)
+            // control passed back here and we won't catch the exception as expected
+            // with async void, we can't track progress/handle it
+            Console.WriteLine(e);
+            
+        }
+        
+    }
+    
+    
+    private void Example9()
+    {
+        // Task.Delay(1)
+        //     .ContinueWith((t) =>
+        //         InvokeAsync(() => { })).Wait();
+
+        DoSomething9().Wait();
+    }
+
+    private async Task DoSomething9()
+    {
+        //example of a deadlock
+        _message = "start";
+        await InvokeAsync(StateHasChanged);
+        await Task.Delay(2000);
+        _message = "stop";
+        await InvokeAsync(StateHasChanged);
+
+    }
+    
+    private async void DoSomething8()
+    {
+        var t = Task.Run(() => Thread.Sleep(2000));
+        var c = t.ContinueWith(_ =>
+        {
+            return "Test!";
+        });
+        var result = await c;
+        _message = result;
+        //this will nuke the application even though this has a try catch in caller
+        throw new Exception("Things go boom");
+    }
+    
+    private async Task DoSomething7()
+    {
+        var t = Task.Run(() => Thread.Sleep(2000));
+        var c = t.ContinueWith(_ =>
+        {
+            return "Test!";
+        });
+        var result = await c;
+        _message = result;
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task<string> DoSomething6()
+    {
+        var t = Task.Run(() => Thread.Sleep(2000));
+        var c = t.ContinueWith(_ =>
+        {
+            return "Test!";
+        });
+        var result = await c;
+        return result;
+    }
+
+    private void DoSomething()
+    {
+        //simulates a heavy computation
+        Thread.Sleep(5000);
+        _message = "Look what you did!";
+        StateHasChanged();
+        
+    }
+    
+    private void DoSomething1()
+    {
+    //simulates a heavy computation
+        var task = Task.Run(() =>Thread.Sleep(5000));
+        //runs after the task has completed. Will likely just run on the same thread
+        //as context switching is expensive
+        task.ContinueWith(_ =>
+        {
+            _message = "Look what you did!";
+            //in the debugger you'll notice that this still throws an exception
+            //however the Task will "swallow" this
+            StateHasChanged();
+
+        });
+    }
+    
+    private void DoSomething2()
+    {
+    //simulates a heavy computation
+        var task = Task.Run(() =>Thread.Sleep(5000));
+    //runs after the task has completed. Will likely just run on the same thread
+    //as context switching is expensive
+        var task2 = task.ContinueWith(_ =>
+        {
+            _message = "Look what you did!";
+            //in the debugger you'll notice that this still throws an exception
+            //however the Task will "swallow" this
+            StateHasChanged();
+
+        });
+        
+        //let's say we wanted to explicitly catch the log and log to some external logging service e.g. serilog
+        task2.ContinueWith(ct =>
+        {
+            if (ct.IsFaulted)
+            {
+                Console.WriteLine("Ahhhhh");
+                //simulates exception thrown in the process of logging issue
+                throw new Exception("Ooops");
+            }
+        });
+    }
+    private void OtherButtonClicked()
+    {
+        _message = "testing";
+        StateHasChanged();
+    }
+
+    
+
+}
