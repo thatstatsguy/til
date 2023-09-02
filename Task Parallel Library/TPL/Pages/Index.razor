@@ -170,6 +170,7 @@
         await Task.Delay(2000).ConfigureAwait(false);
         Console.WriteLine("this continutation will run on the same thread as the thread.sleep");
         Console.WriteLine("instead of the original calling thread. Can speed up application");
+        //great for library developers. Less thread swithcing
     }
 
 }
