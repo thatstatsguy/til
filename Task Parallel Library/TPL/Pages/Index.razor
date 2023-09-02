@@ -11,8 +11,13 @@
         <button  @onclick="ConditionalContinuation">Conditional continuation</button>
     </div>
     <div class="my-1">
-        <button  @onclick="TaskCancellation">Task cancellation</button>
+        <button  @onclick="TaskCancellation">Trigger task</button>
         <button  @onclick="TriggerCancel">Trigger cancellation</button>
+    </div>
+    
+    <div class="my-1">
+        <button  @onclick="TaskCancellation2">Trigger Task</button>
+        <button  @onclick="TriggerCancel">Trigger cancellation with early cancellation message</button>
     </div>
     
 </div>
@@ -92,6 +97,19 @@
     private void TriggerCancel()
     {
         _cancellationToken.Cancel();
+    }
+
+    private async Task TaskCancellation2()
+    {
+        var token = _cancellationToken.Token;
+        token.Register(() =>
+        {
+            _message =  "Cancellation has been requested!";
+            InvokeAsync(StateHasChanged);
+        });
+        _message = await MyTaskToCancel(token);
+        _cancellationToken = new CancellationTokenSource();
+        StateHasChanged();
     }
 
 }
