@@ -14,6 +14,26 @@
         Obviously a dumb idea with a blazor server but here we are
     </div>
 </div>
+
+<div>
+    <div class="my-1">
+        <button  @onclick="ManualAddToThreadPool">Manually Add something to ThreadPool</button>
+    </div>
+</div>
+
+<div>
+    <div class="my-1">
+        <button  @onclick="TriggerAttachedSubTasks">Attach child tasks to parent task</button>
+        
+    </div>
+</div>
+
+<div>
+    <div class="my-1">
+        <button  @onclick="DemonstrateFactoryQuirk">Demonstrate scenario where you need to double await</button>
+        
+    </div>
+</div>
 @if (!string.IsNullOrEmpty(_message))
 {
     <p>@_message</p>
@@ -71,12 +91,104 @@
             process.Exited += (_, _) =>
             {
                 source.SetResult(null);
+                //also able to set the exception if you get one while working with this
+                //source.SetException();
             };
             process.Start();
             return source.Task;
         });
         await myNotePadeTask;
         _message = "Notepad closed.";
+    }
+
+    private async Task ManualAddToThreadPool()
+    {
+        var result = await UseThreadPool();
+        _message = result;
+        StateHasChanged();
+        
+    }
+
+    private Task<string> UseThreadPool()
+    {
+        var source = new TaskCompletionSource<string>();
+        ThreadPool.QueueUserWorkItem(_ =>
+        {
+            try
+            {
+                Thread.Sleep(2000);
+                source.SetResult("Testing");
+            }
+            catch (Exception e)
+            {
+                //obvs won't throw an exception, but to show it can be captured.
+                source.SetException(e);
+            }
+            
+        });
+        return source.Task;
+    }
+
+    private async Task TriggerAttachedSubTasks()
+    {
+        //note that using Task.Run()... 
+        // you implicitly use , TaskCreationOptions.DenyChildAttach
+        
+        _message = "starting";
+        StateHasChanged();
+        Console.WriteLine("start");
+        await Task.Factory.StartNew(() =>
+        {
+            //without , TaskCreationOptions.AttachedToParent
+            // the task will "finish" prior to these completeing
+            Task.Factory.StartNew(() =>
+            {
+                Thread.Sleep(2000);
+                Console.WriteLine("Task 1");
+            }, TaskCreationOptions.AttachedToParent);
+            
+            Task.Factory.StartNew(() =>
+            {
+                Thread.Sleep(2000);
+                Console.WriteLine("Task 2");
+            }, TaskCreationOptions.AttachedToParent);
+            
+            Task.Factory.StartNew(() =>
+            {
+                Thread.Sleep(2000);
+                Console.WriteLine("Task 3");
+            }, TaskCreationOptions.AttachedToParent);
+        });//using , TaskCreationOptions.DenyChildAttach here would prevent inner tasks attaching
+        Console.WriteLine("finito");
+        _message = "finished";
+        StateHasChanged();
+
+    }
+
+    private async Task DemonstrateFactoryQuirk()
+    {
+        var a = Task.Factory.StartNew(async () =>
+        {
+            await Task.Delay(1);
+            return 1;
+        });
+        var b = Task.Run(async () =>
+        {
+            await Task.Delay(1);
+            return 1;
+        });
+        var c = Task.Factory.StartNew(async () =>
+        {
+            await Task.Delay(1);
+            return 1;
+        }).Unwrap();
+        
+        var resultsA = await await a; // note the double wrapped up task
+        var resultsB = await  b; 
+        var resultsC = await  c; // unwrap prettifies this for us
+        Console.WriteLine($"Factory result: {resultsA}");
+        Console.WriteLine($"TaskRun result: {resultsB}");
+        Console.WriteLine($"Unwrap result: {resultsC}");
     }
 
 }
