@@ -10,6 +10,10 @@
     <div class="my-1">
         <button  @onclick="ConditionalContinuation">Conditional continuation</button>
     </div>
+    <div class="my-1">
+        <button  @onclick="TaskCancellation">Task cancellation</button>
+        <button  @onclick="TriggerCancel">Trigger cancellation</button>
+    </div>
     
 </div>
 
@@ -21,6 +25,7 @@
 
 @code {
     private string _message = string.Empty;
+    private CancellationTokenSource _cancellationToken = new CancellationTokenSource();
     private void AccessResultInContinuation()
     {
         var taskA = Task.Run(() =>
@@ -62,6 +67,31 @@
     
         }, TaskContinuationOptions.OnlyOnFaulted);
         
+    }
+
+    private async Task TaskCancellation()
+    {
+        
+        _message = await MyTaskToCancel(_cancellationToken.Token);
+        _cancellationToken = new CancellationTokenSource();
+        StateHasChanged();
+    }
+
+    private Task<string> MyTaskToCancel(CancellationToken token)
+    {
+        return Task.Run(() =>
+        {
+            //simulates heavy IO operation like loading file where you may want to cancel halfway through load
+            Thread.Sleep(2000);
+            //exception option
+            //token.ThrowIfCancellationRequested();
+            return token.IsCancellationRequested ? "operation cancelled" : "Test";
+        }, token);
+    }
+
+    private void TriggerCancel()
+    {
+        _cancellationToken.Cancel();
     }
 
 }
