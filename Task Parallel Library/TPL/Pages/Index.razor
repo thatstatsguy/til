@@ -20,6 +20,10 @@
         <button  @onclick="TriggerCancel">Trigger cancellation with early cancellation message</button>
     </div>
     
+    <div class="my-1">
+        <button  @onclick="TriggerTogetherAndAwaitAll">Trigger Multiple Tasks Together with WhenAll</button>
+    </div>
+    
 </div>
 
 
@@ -112,4 +116,23 @@
         StateHasChanged();
     }
 
+    private async Task TriggerTogetherAndAwaitAll()
+    {
+        var taskList = new List<Task<string>>();
+        taskList.Add(DoSomething("Testing"));
+        taskList.Add(DoSomething("One"));
+        taskList.Add(DoSomething("Two"));
+        var result = await Task.WhenAll(taskList);
+        _message = string.Join(",", result);
+        StateHasChanged();
+    }
+
+    private Task<string> DoSomething(string message)
+    {
+        return Task.Run(() =>
+        {
+            Thread.Sleep(2000);
+            return message;
+        });
+    }
 }
