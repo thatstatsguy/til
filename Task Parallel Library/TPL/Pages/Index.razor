@@ -30,6 +30,10 @@
         <button  @onclick="DontRunContinuationOnOriginalThread">Trigger Task - don't come back to original thread in continuation</button>
     </div>
     
+    <div class="my-1">
+        <button  @onclick="ParallelInvocation">Trigger Tasks with Parallel Extension</button>
+    </div>
+    
 </div>
 
 
@@ -171,6 +175,53 @@
         Console.WriteLine("this continutation will run on the same thread as the thread.sleep");
         Console.WriteLine("instead of the original calling thread. Can speed up application");
         //great for library developers. Less thread swithcing
+        //reason is that continuations are executed on a different thread
+    }
+
+    private void ParallelInvocation()
+    {
+        //note that this is a blocking action on the current thread.
+        //Can wrap in a task.run if want to not block things
+        // max degree of parallelism allows you to control how much of the resources you want to use.
+        Parallel.Invoke(new ParallelOptions(){MaxDegreeOfParallelism = 2},
+            () =>
+            {
+                Console.WriteLine("Starting item 1");
+                Thread.Sleep(2000);
+                Console.WriteLine("Finishing item 1");
+            },    
+            () =>
+            {
+                Console.WriteLine("Starting item 2");
+                Thread.Sleep(2000);
+                Console.WriteLine("Finishing item 2");
+            },
+            () =>
+            {
+                Console.WriteLine("Starting item 3");
+                Thread.Sleep(2000);
+                Console.WriteLine("Finishing item 3");
+            },
+            () =>
+            {
+                Console.WriteLine("Starting item 4");
+                Thread.Sleep(2000);
+                Console.WriteLine("Finishing item 4");
+            }
+            //technically if you're wanting to execute something on this thread while you're waiting for these
+            //to wrap up you'll cause a deadlock
+            // () =>
+            // {
+            //     Console.WriteLine("Starting item that will cause deadlock");
+            //     Thread.Sleep(2000);
+            //     _message = "Lekker man, lekker";
+            //     InvokeAsync(StateHasChanged);
+            //     Console.WriteLine("Finishing dealock item (shouldn't happen)");
+            // }
+        );
+
+        _message = "all done";
+        StateHasChanged();
     }
 
 }
