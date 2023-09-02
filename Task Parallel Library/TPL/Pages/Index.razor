@@ -37,6 +37,18 @@
         <button  @onclick="ParallelForEachInvocation">Trigger Parallel Foreach Extension</button>
     </div>
     
+    
+    <div class="my-1">
+        <button  @onclick="ParallelAddWithoutAnyLocks">Trigger Parallel Foreach Addition Without Locks</button>
+    </div>
+    
+    <div class="my-1">
+        <button  @onclick="ParallelAddWithInterLock">Trigger Parallel Foreach Addition With InterLock</button>
+    </div>
+    
+    <div class="my-1">
+        <button  @onclick="ParallelAddWithSyncRootLock">Trigger Parallel Foreach Addition with SyncLock</button>
+    </div>
 </div>
 
 
@@ -245,6 +257,52 @@
         });
 
         _message = "All done prcessing letters";
+        StateHasChanged();
+    }
+
+    private int _total = 0;
+    private void ParallelAddWithoutAnyLocks()
+    {
+        _total = 0;
+        var letters = Enumerable.Range(1, 100000).ToArray();;
+        Parallel.ForEach(letters, (number) =>
+        {
+            _total += number;
+        });
+        //you're going to see weird things here
+        _message = $"All done processing numbers. Sum is: {_total}";
+        StateHasChanged();
+    }
+
+    private void ParallelAddWithInterLock()
+    {
+        _total = 0;
+        var letters = Enumerable.Range(1, 100000).ToArray();;
+        Parallel.ForEach(letters, (number) =>
+        {
+            Interlocked.Add(ref _total, number) ;
+        });
+    
+        _message = $"All done processing numbers. Sum is: {_total}";
+        StateHasChanged();
+    }
+
+    static object _syncroot = new object();
+    private void ParallelAddWithSyncRootLock()
+    {
+        _total = 0;
+        var letters = Enumerable.Range(1, 100000).ToArray();;
+        Parallel.ForEach(letters, (number) =>
+        {
+            //beware dedalocks!
+            lock (_syncroot)
+            {
+                _total += number;
+            }
+            
+        });
+    
+        _message = $"All done processing numbers. Sum is: {_total}";
         StateHasChanged();
     }
 
