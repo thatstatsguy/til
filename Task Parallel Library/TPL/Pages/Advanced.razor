@@ -1,3 +1,82 @@
 ﻿@page "/advanced"
+@using System.Diagnostics
 
 
+<div>
+    <div class="my-1">
+        <button  @onclick="TaskWithProgress">Trigger task with progress updates</button>
+    </div>
+</div>
+
+<div>
+    <div class="my-1">
+        <button  @onclick="OpenNotePadeAndMonitorForClose">Trigger task to open notepad</button>
+        Obviously a dumb idea with a blazor server but here we are
+    </div>
+</div>
+@if (!string.IsNullOrEmpty(_message))
+{
+    <p>@_message</p>
+}
+
+@code {
+    private string _message = string.Empty;
+    private async Task TaskWithProgress()
+    {
+        var letters = new List<string>() { "A", "B", "C", "D" };
+        var progress = new Progress<string>();
+        progress.ProgressChanged += (_, letter) =>
+        {
+            _message = $"{letter} is done processing!";
+            StateHasChanged();
+        };
+
+        var tasks = letters.Select(l => DoSomethingWithALetter(l, progress));
+        // await Task.WhenAll(tasks);
+        foreach (var task in tasks)
+        {
+            await task;
+        }
+    }
+
+    private Task DoSomethingWithALetter(string letter, IProgress<string> progressTracker)
+    {
+        return
+            //https://learn.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.Task.-ctor?view=net-7.0
+            Task.Run(() =>
+            {
+                Thread.Sleep(1000);
+                //simulate doing something meaningful with a letter here
+                progressTracker.Report(letter);
+            });
+
+    }
+
+    private async Task OpenNotePadeAndMonitorForClose()
+    {
+        var myNotePadeTask = Task.Run(() =>
+        {
+
+            var source = new TaskCompletionSource<object>();
+            var process = new Process()
+            {
+                EnableRaisingEvents = true,
+                StartInfo = new ProcessStartInfo("Notepad.exe")
+                {
+                    RedirectStandardError = true,
+                    UseShellExecute = false
+                }
+            };
+            
+            process.Exited += (_, _) =>
+            {
+                source.SetResult(null);
+            };
+            process.Start();
+            return source.Task;
+        });
+        await myNotePadeTask;
+        _message = "Notepad closed.";
+    }
+
+}

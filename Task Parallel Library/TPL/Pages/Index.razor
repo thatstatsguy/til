@@ -187,9 +187,9 @@
     private async Task DontRunContinuationOnOriginalThread()
     {
         await Task.Delay(2000).ConfigureAwait(false);
-        Console.WriteLine("this continutation will run on the same thread as the thread.sleep");
+        Console.WriteLine("this continuation will run on the same thread as the thread.sleep");
         Console.WriteLine("instead of the original calling thread. Can speed up application");
-        //great for library developers. Less thread swithcing
+        //great for library developers. Less thread switching
         //reason is that continuations are executed on a different thread
     }
 
@@ -256,7 +256,7 @@
             }
         });
 
-        _message = "All done prcessing letters";
+        _message = "All done processing letters";
         StateHasChanged();
     }
 
@@ -294,7 +294,7 @@
         var letters = Enumerable.Range(1, 100000).ToArray();;
         Parallel.ForEach(letters, (number) =>
         {
-            //beware dedalocks!
+            //beware deadlocks!
             lock (_syncroot)
             {
                 _total += number;
