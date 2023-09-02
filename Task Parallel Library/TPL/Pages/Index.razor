@@ -1,9 +1,36 @@
 ﻿@page "/"
 
+
+
 <PageTitle>Index</PageTitle>
+<div>
+    <button @onclick="AccessResultInContinuation">Access result with continuation</button>
+</div>
 
-<h1>Hello, world!</h1>
 
-Welcome to your new app.
+@if (!string.IsNullOrEmpty(_message))
+{
+    <p>@_message</p>
+}
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@code {
+    private string _message = string.Empty;
+    private void AccessResultInContinuation()
+    {
+        var taskA = Task.Run(() =>
+        {
+            Thread.Sleep(2000);
+            return "Test";
+        });
+
+        taskA.ContinueWith(t =>
+        {
+            //fine to reference result in this as you're guaranteed that taskA will be complete.
+            _message = $"A {t.Result}";
+            InvokeAsync(StateHasChanged);
+            //if any exceptions thrown here you won't see this as we don't await it
+        });
+        
+        
+    }
+}
