@@ -33,6 +33,9 @@
     <div class="my-1">
         <button  @onclick="ParallelInvocation">Trigger Tasks with Parallel Extension</button>
     </div>
+    <div class="my-1">
+        <button  @onclick="ParallelForEachInvocation">Trigger Parallel Foreach Extension</button>
+    </div>
     
 </div>
 
@@ -221,6 +224,27 @@
         );
 
         _message = "all done";
+        StateHasChanged();
+    }
+
+    private void ParallelForEachInvocation()
+    {
+        //can also pass in the parallel options if needed
+        var letters = new List<string>() { "A", "B", "C", "D" };
+        Parallel.ForEach(letters, (letter, state) =>
+        {
+            if (letter == "A")
+            {
+                Console.WriteLine("Got to A. Breaking out when available");
+                state.Stop();//break also available
+            }
+            else
+            {
+                Console.WriteLine($"Got to {letter}");
+            }
+        });
+
+        _message = "All done prcessing letters";
         StateHasChanged();
     }
 
