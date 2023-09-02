@@ -4,7 +4,13 @@
 
 <PageTitle>Index</PageTitle>
 <div>
-    <button @onclick="AccessResultInContinuation">Access result with continuation</button>
+    <div class="my-1">
+        <button  @onclick="AccessResultInContinuation">Access result with continuation</button>
+    </div>
+    <div class="my-1">
+        <button  @onclick="ConditionalContinuation">Conditional continuation</button>
+    </div>
+    
 </div>
 
 
@@ -33,4 +39,29 @@
         
         
     }
+
+    private void ConditionalContinuation()
+    {
+        var taskA = Task.Run(() =>
+        {
+            throw new Exception("I made a boo boo");
+        });
+
+        taskA.ContinueWith(_ =>
+        {
+            //shouldn't see this as the continuation option wasn't met
+            _message = "I've hit the code where an exception wasn't thrown";
+            InvokeAsync(StateHasChanged);
+    
+        }, TaskContinuationOptions.OnlyOnRanToCompletion);
+        taskA.ContinueWith(t =>
+        {
+            //She see this as faulted condition met
+            _message = $"Houston, {t.Exception.InnerException.Message}";
+            InvokeAsync(StateHasChanged);
+    
+        }, TaskContinuationOptions.OnlyOnFaulted);
+        
+    }
+
 }
