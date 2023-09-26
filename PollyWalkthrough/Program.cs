@@ -1,12 +1,10 @@
 using PollyWalkthrough.Baseline;
-using PollyWalkthrough.CircuitBreaker;
+using PollyWalkthrough.Caching;
 using PollyWalkthrough.ExponentialBackoff;
 using PollyWalkthrough.ExponentialBackoffWithJitter;
-using PollyWalkthrough.Fallback;
 using PollyWalkthrough.RateLimit;
 using PollyWalkthrough.Retries;
 using PollyWalkthrough.SelfBakedTransientFailure;
-using PollyWalkthrough.Timeout;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,15 +29,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.AddBaselineEndpoints();
-app.AddCircuitBreakerEndpoints();
-app.AddExponentialBackoffEndpoints();
-app.AddExponentialBackoffWithJitterEndpoints();
-app.AddCachingBackEndpoints();
-app.AddRateLimitEndpoints();
-app.AddRetryEndpoints();
-app.AddCustomEndpoints();
-app.AddTimeoutEndpoints();
+app
+    .AddBaselineEndpoints()
+    .AddExponentialBackoffEndpoints()
+    .AddExponentialBackoffWithJitterEndpoints()
+    .AddCachingBackEndpoints()
+    .AddRateLimitEndpoints()
+    .AddRetryEndpoints()
+    .AddCustomEndpoints();
 
 app.Run();
 

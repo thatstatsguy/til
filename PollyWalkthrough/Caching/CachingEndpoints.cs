@@ -1,10 +1,9 @@
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Polly;
 using Polly.Caching.Memory;
 
-namespace PollyWalkthrough.Fallback;
+namespace PollyWalkthrough.Caching;
 
 
 public static class CachingEndpoints
