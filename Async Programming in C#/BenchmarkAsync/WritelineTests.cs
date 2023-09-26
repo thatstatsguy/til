@@ -2,10 +2,16 @@ using BenchmarkDotNet.Attributes;
 
 namespace BenchmarkAsync;
 
-public class NestedAsyncClass
+public class WritelineTests
 {
     [Benchmark]
-    public async Task Baseline()
+    public void BaselineWriteline()
+    {
+        Thread.Sleep(100);
+        Console.WriteLine("Done baseline");
+    }
+    [Benchmark]
+    public async Task BaselineWritelineAsync()
     {
         await Task.Run(() =>
         {
@@ -32,7 +38,15 @@ public class NestedAsyncClass
     {
         await Task.Run( () =>
             Task.Run(() =>
-                Task.Run( () =>
-                    Task.Run(() => Task.Delay(100)))));
+                Task.Run( () => 
+                    Task.Run(() =>
+                    {
+                        return Task.Run(() =>
+                        {
+                            Thread.Sleep(100);
+                            Console.WriteLine("Done Nested Statements Many awaits");
+                        });
+                        
+                    }))));
     }
 }
