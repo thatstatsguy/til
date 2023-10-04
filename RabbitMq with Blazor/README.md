@@ -1,0 +1,1 @@
+Note when calling docker compose up, the order of how things start up is 100% - the application might start up before rabbit mq is ready. Just restart application if this is the case.
