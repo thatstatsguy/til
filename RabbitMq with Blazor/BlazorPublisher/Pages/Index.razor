@@ -1,0 +1,38 @@
+﻿@page "/"
+@using System.Text;
+@using RabbitMQ.Client;
+@inject ILogger<Index> Logger
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello from the rabbitmq publisher!</h1>
+
+<button @onclick="SendHelloWorld">Send Hello World Message</button>
+
+@code {
+    private void SendHelloWorld()
+    {
+        var factory = new ConnectionFactory { HostName = "my-rabbit" };
+        using var connection = factory.CreateConnection();
+        using var channel = connection.CreateModel();
+
+        // channel.QueueDeclare(queue: "hello",
+        //     durable: false,
+        //     exclusive: false,
+        //     autoDelete: false,
+        //     arguments: null);
+        channel.ExchangeDeclare("logs", ExchangeType.Fanout);
+        const string message = "Hello World!";
+        var body = Encoding.UTF8.GetBytes(message);
+
+        channel.BasicPublish(exchange: "logs",
+            routingKey: string.Empty,
+            basicProperties: null,
+            body: body);
+        // channel.BasicPublish(exchange: string.Empty,
+        //     routingKey: "hello",
+        //     basicProperties: null,
+        //     body: body);
+        Logger.LogInformation($"Message sent. {message}");
+    }
+}

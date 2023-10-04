@@ -1,0 +1,32 @@
+﻿services:
+  messagebroker:
+    image: rabbitmq:3-management
+    hostname: my-rabbit
+    ports:
+      - 8080:15672
+      - 5672:5672
+  blazorpublisher:
+    depends_on: 
+      - messagebroker
+    
+    image: blazorpublisher
+    environment:
+      - DETAILEDERRORS = "TRUE"
+    build:
+      context: .
+      dockerfile: BlazorPublisher/Dockerfile
+    ports:
+      - 8082:80
+
+  blazorsubscriber:
+    depends_on:
+      - messagebroker
+      - blazorpublisher
+    image: blazorsubscriber
+    build:
+      context: .
+      dockerfile: BlazorSubscriber/Dockerfile
+    ports:
+      - 8081:80
+  
+  
