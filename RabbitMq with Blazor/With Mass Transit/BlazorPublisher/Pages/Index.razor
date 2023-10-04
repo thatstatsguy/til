@@ -1,0 +1,22 @@
+﻿@page "/"
+@inject ILogger<Index> Logger
+@inject IBus Bus
+@using MassTransit;
+@using Contracts
+<PageTitle>Index</PageTitle>
+
+<h1>Hello from the rabbitmq publisher!</h1>
+
+<button @onclick="SendHelloWorld">Send Hello World Message</button>
+
+@code {
+
+    
+    private async Task SendHelloWorld()
+    {
+        var message = new GettingStarted() {Value = "Hello world!"};
+        await Bus.Publish(message);
+        
+        Logger.LogInformation("Message sent. {Message}", message);
+    }
+}
