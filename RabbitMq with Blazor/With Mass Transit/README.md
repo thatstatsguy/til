@@ -10,3 +10,6 @@ https://stackoverflow.com/questions/70421240/masstransit-ensure-queues-created-b
 Really important that the namespaces are the same for the contracts consumer and publisher otherwise queues won't match
 
 name of consumer based on the name of the consumer file i.e. if you want to use GetStarted as the contract you need a GetStartedConsumer so that the correct queue name is created
+
+- namespace is important
+- base classes not suported
